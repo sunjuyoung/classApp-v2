@@ -1,0 +1,22 @@
+server:
+  port: 8888
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/studyapi
+    username: sun
+    password: rnrdj123
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    com.example.studyApi: debug
+
+jwt:
+  secret:
+    key: halo3030993
