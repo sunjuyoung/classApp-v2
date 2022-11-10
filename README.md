@@ -1,1 +1,4 @@
-	<version>2.6.13</version>
+## 
+## spring boot version 2.6.13 , postgresql, jpa
+## react 
+
