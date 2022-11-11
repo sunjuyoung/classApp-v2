@@ -1,6 +1,7 @@
 package com.example.studyApi.config;
 
 import com.example.studyApi.security.filter.ApiLoginFilter;
+import com.example.studyApi.security.filter.TokenCheckFilter;
 import com.example.studyApi.service.AccountService;
 import com.example.studyApi.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -57,10 +58,13 @@ public class SecurityConfig {
         http.authenticationManager(authenticationManager);
 
         ApiLoginFilter apiLoginFilter = new ApiLoginFilter(jwtUtil,authenticationManager);
-        apiLoginFilter.setFilterProcessesUrl("/api/login");
+        apiLoginFilter.setFilterProcessesUrl("/login");
 
-        http.authorizeRequests().antMatchers("/api/login","/api/token/refresh").permitAll();
+        http.authorizeRequests().antMatchers("/login","/refreshToken").permitAll();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(new TokenCheckFilter(jwtUtil,accountService),UsernamePasswordAuthenticationFilter.class);
+
         http.csrf().disable();
         http.cors(httpSecurityCorsConfigurer -> {
             httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
@@ -69,6 +73,8 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
