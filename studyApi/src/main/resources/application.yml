@@ -6,7 +6,20 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/studyapi
     username: sun
-    password: rnrdj123
+    password: ENC(H63qI5bYWSETtEpTW94YFS+66+xLGEr0)
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: syseoz@gmail.com
+    password: ENC(ohcOhIx/++oN4m9LFxKjiFQAODrte+m41rJorPOTjYQ=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 
   jpa:
     show-sql: true
@@ -20,3 +33,10 @@ logging:
 jwt:
   secret:
     key: halo3030993
+
+
+
+jasypt:
+  encryptor:
+    password: testPassword
+    bean: jasyptStringEncryptor

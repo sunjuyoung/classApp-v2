@@ -27,11 +27,11 @@ class AccountRepositoryTest {
     public void testSave(){
 
         Set<Roles> roles = new HashSet<>();
-        roles.add(Roles.MEMBER);
+        roles.add(Roles.ADMIN);
 
         Account account = Account.builder()
-                .nickname("sun")
-                .email("sun")
+                .nickname("ju")
+                .email("syseoz@naver.com")
                 .roles(roles)
                 .password(passwordEncoder.encode("1234"))
                 .build();

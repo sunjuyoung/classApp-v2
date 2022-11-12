@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 @Entity
@@ -49,9 +50,15 @@ public class Account extends BaseTime{
     private String location;
     private String occupation;
 
+    private String emailCheckToken;
+
     @Lob
     private String profileImage;
 
+
+    public void emailTokenGenerate(){
+        this.emailCheckToken = UUID.randomUUID().toString();
+    }
 
 
 }
