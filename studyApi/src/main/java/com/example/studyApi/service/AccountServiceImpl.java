@@ -1,8 +1,10 @@
 package com.example.studyApi.service;
 
 import com.example.studyApi.domain.Account;
+import com.example.studyApi.domain.Roles;
 import com.example.studyApi.dto.AccountDTO;
 import com.example.studyApi.dto.CurrentUserDTO;
+import com.example.studyApi.dto.SignUpDTO;
 import com.example.studyApi.mail.EmailMessage;
 import com.example.studyApi.mail.EmailService;
 import com.example.studyApi.repository.AccountRepository;
@@ -12,10 +14,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -26,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
-
+    private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
 
@@ -47,6 +52,16 @@ public class AccountServiceImpl implements AccountService {
 
         emailService.sendEmail(emailMessage);
         return  modelMapper.map(account, AccountDTO.class);
+    }
+
+    @Override
+    public String saveUser(SignUpDTO signUpDTO) {
+        Set<Roles> rolesSet = new HashSet<>();
+        rolesSet.add(Roles.GUEST);
+        Account account = modelMapper.map(signUpDTO, Account.class);
+        log.info(account.getNickname());
+        accountRepository.save(account);
+        return signUpDTO.getNickname();
     }
 
     @Override

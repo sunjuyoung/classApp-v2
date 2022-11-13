@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -35,11 +36,9 @@ public class SecurityConfig {
 
     private final AccountService accountService;
     private final JWTUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -49,7 +48,7 @@ public class SecurityConfig {
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
         authenticationManagerBuilder.userDetailsService(accountService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder);
 
         // get AuthenticationManager
         AuthenticationManager authenticationManager =
@@ -60,7 +59,8 @@ public class SecurityConfig {
         ApiLoginFilter apiLoginFilter = new ApiLoginFilter(jwtUtil,authenticationManager);
         apiLoginFilter.setFilterProcessesUrl("/login");
 
-        http.authorizeRequests().antMatchers("/login","/refreshToken").permitAll();
+        http.authorizeRequests().antMatchers("/login","/refreshToken","/api/signUp").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/signUp").permitAll();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(new TokenCheckFilter(jwtUtil,accountService),UsernamePasswordAuthenticationFilter.class);

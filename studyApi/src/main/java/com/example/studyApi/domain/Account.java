@@ -21,12 +21,11 @@ public class Account extends BaseTime{
     @Id @GeneratedValue
     private Long id;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true)
     private String email;
-    @Column(unique = true,nullable = false)
+    @Column(unique = true)
     private String nickname;
 
-    @Column(nullable = false)
     private String password;
 
     private boolean social;
@@ -55,10 +54,20 @@ public class Account extends BaseTime{
     @Lob
     private String profileImage;
 
+    //알림
+    private boolean notificationOnlyWeb = true;
+
+
+    public void signUp(){
+        this.roles.add(Roles.GUEST);
+
+    }
 
     public void emailTokenGenerate(){
         this.emailCheckToken = UUID.randomUUID().toString();
     }
+
+
 
 
 }

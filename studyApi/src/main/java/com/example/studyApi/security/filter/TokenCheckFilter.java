@@ -27,7 +27,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        if(!path.startsWith("/api/")){
+        if(!path.startsWith("/api/") || path.startsWith("/api/signUp")){
             filterChain.doFilter(request,response);
             return;
         }
