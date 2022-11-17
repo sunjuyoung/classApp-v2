@@ -59,7 +59,7 @@ public class SecurityConfig {
         ApiLoginFilter apiLoginFilter = new ApiLoginFilter(jwtUtil,authenticationManager);
         apiLoginFilter.setFilterProcessesUrl("/login");
 
-        http.authorizeRequests().antMatchers("/login","/refreshToken","/api/signUp").permitAll();
+        http.authorizeRequests().antMatchers("/login","/refreshToken","/check-email-token").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/signUp").permitAll();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

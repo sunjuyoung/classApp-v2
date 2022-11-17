@@ -6,10 +6,12 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -80,4 +82,12 @@ public class TokenController {
         log.info("--- parseJson ---");
         return gson.fromJson(reader, Map.class);
     }
+
+    @GetMapping("/check-email-token")
+    public ResponseEntity<Map<String,Boolean>> checkEmailToken(@RequestParam("email")String email,
+                                                               @RequestParam("token")String token){
+        boolean result = accountService.confirmEmailToken(email, token);
+        return ResponseEntity.ok(Map.of("result",result));
+    }
+
 }

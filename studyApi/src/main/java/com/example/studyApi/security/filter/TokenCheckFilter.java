@@ -57,7 +57,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             log.error(e);
             throw new RuntimeException();
         }
-        filterChain.doFilter(request,response);
+
 
     }
 }

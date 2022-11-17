@@ -57,14 +57,12 @@ public class AccountController {
         log.info(signUpDTO.getEmail());
         Map<String,String> result = new HashMap<>();
         if(errors.hasErrors()){
-            result.put("fail",null);
+            result.put("result",errors.toString());
             return ResponseEntity.ok(result);
         }
         String newUser = accountService.saveUser(signUpDTO);
-        result.put("success",newUser);
+        result.put("result",newUser);
         return ResponseEntity.ok(result);
-
-
     }
 
 

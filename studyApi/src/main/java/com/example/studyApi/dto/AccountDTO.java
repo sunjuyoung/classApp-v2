@@ -1,25 +1,27 @@
 package com.example.studyApi.dto;
 
 import com.example.studyApi.domain.Roles;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountDTO {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AccountDTO{
 
     private String email;
 
     private String nickname;
 
-    private String password;
 
     private boolean social;
 

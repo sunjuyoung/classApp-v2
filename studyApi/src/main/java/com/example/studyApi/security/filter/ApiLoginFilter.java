@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -56,16 +57,19 @@ public class ApiLoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info(user.getAuthorities());
 
 
+
+        List<String> roleList = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         Map<String,Object> claim = Map.of("nickname",authentication.getName(),
-                "roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+                "roles",roleList);
         String accessToken = jwtUtil.generateToken(claim,1);
         String refreshToken = jwtUtil.generateToken(claim,10);
 
         Gson gson = new Gson();
         log.info(accessToken);
 
-        Map<String,String> keyMap = Map.of("accessToken",accessToken ,
-                "refreshToken",refreshToken,"nickname",user.getUsername());
+        Map<String,Object> keyMap = Map.of("accessToken",accessToken ,
+                "refreshToken",refreshToken,"nickname",user.getUsername(),
+                "roles",roleList);
         String jsonStr = gson.toJson(keyMap);
         response.getWriter().println(jsonStr);
 
