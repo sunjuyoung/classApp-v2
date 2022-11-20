@@ -49,6 +49,13 @@ public class Account{
     inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
+
+    @ManyToMany
+    @JoinTable(name = "account_zone",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "zone_id"))
+    private Set<Zone> zones = new HashSet<>();
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     @Enumerated(EnumType.STRING)

@@ -1,9 +1,6 @@
 package com.example.studyApi.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +11,7 @@ import javax.persistence.Id;
 @Getter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
+@ToString(exclude = "tag_id")
 public class Tag {
 
     @Id

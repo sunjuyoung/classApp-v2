@@ -1,9 +1,9 @@
 package com.example.studyApi.controller;
 
 import com.example.studyApi.domain.Tag;
-import com.example.studyApi.dto.AccountDTO;
-import com.example.studyApi.dto.PasswordDTO;
-import com.example.studyApi.dto.ProfileDTO;
+import com.example.studyApi.domain.Zone;
+import com.example.studyApi.dto.*;
+import com.example.studyApi.repository.ZoneRepository;
 import com.example.studyApi.service.AccountService;
 import com.example.studyApi.service.SettingsService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
@@ -27,6 +29,7 @@ public class SettingsController {
 
     private final AccountService accountService;
     private final SettingsService settingsService;
+    private final ZoneRepository zoneRepository;
 
     @GetMapping(value = "/profile/{nickname}")
     public ResponseEntity<?> getProfile(@PathVariable("nickname")String nickname){
@@ -51,21 +54,49 @@ public class SettingsController {
         return ResponseEntity.ok().body("success");
     }
 
-    @GetMapping(value = "/tag")
-    public ResponseEntity<?> updatePassword(){
-        Set<Tag> tags = settingsService.getTags();
-        return ResponseEntity.ok().body("success");
+    /**
+     *  TAG
+     */
+    @GetMapping(value = "/tag/{nickname}")
+    public ResponseEntity<List<String>> updatePassword(@PathVariable("nickname")String nickname){
+        List<String> tags = settingsService.getTags(nickname);
+        return ResponseEntity.ok().body(tags);
     }
 
     @PostMapping(value = "/tag/{nickname}")
-    public ResponseEntity<?> updateTag(@PathVariable("nickname")String nickname,
-                                            @Valid @RequestBody PasswordDTO passwordDTO, Errors errors){
-        if(errors.hasErrors()){
-            return ResponseEntity.ok().body("password not valid");
+    public ResponseEntity<?> updateTag(@PathVariable("nickname")String nickname, @RequestBody TagDTO tagDTO ){
+        Tag tag = settingsService.saveTag(tagDTO);
+        if(tag !=null){
+            accountService.addTag(nickname,tag);
         }
-        accountService.updatePassword(passwordDTO,nickname);
         return ResponseEntity.ok().body("success");
+    }
 
+    @DeleteMapping(value = "/tag/{nickname}/{tagTitle}")
+    public ResponseEntity<?> deleteTag(@PathVariable("nickname")String nickname,@PathVariable("tagTitle")String tagTitle ){
+         accountService.deleteTag(tagTitle,nickname);
+        return ResponseEntity.ok().body("success");
+    }
+
+    /** ZONE
+     */
+    @GetMapping(value = "/zone")
+    public ResponseEntity<?> getZones( ){
+        List<Zone> all = zoneRepository.findAll();
+        List<String> zones = all.stream().map(Zone::getLocalNameOfCity).collect(Collectors.toList());
+        return ResponseEntity.ok().body(zones);
+    }
+
+    @GetMapping(value = "/zone/{nickname}")
+    public ResponseEntity<?> getZone(@PathVariable("nickname")String nickname ){
+        List<String> zone = accountService.getZone(nickname);
+        return ResponseEntity.ok().body(zone);
+    }
+
+    @PostMapping(value = "/zone/{nickname}")
+    public ResponseEntity<?> addZone(@PathVariable("nickname")String nickname , @RequestBody List<ZoneDTO> zoneData){
+        accountService.addZone(zoneData,nickname);
+        return ResponseEntity.ok().body(zoneData);
     }
 
 }

@@ -39,4 +39,12 @@ class AccountRepositoryTest {
         accountRepository.save(account);
     }
 
+    @Test
+    public void withTag(){
+        Account account = Account.builder()
+            .nickname("test1")
+                .build();
+        accountRepository.existsByNickname("test1");
+    }
+
 }

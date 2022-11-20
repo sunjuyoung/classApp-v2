@@ -1,7 +1,9 @@
 package com.example.studyApi;
 
 import com.example.studyApi.dto.SignUpDTO;
+import com.example.studyApi.dto.TagDTO;
 import com.example.studyApi.service.AccountService;
+import com.example.studyApi.service.SettingsService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +24,7 @@ public class StudyApiApplication {
 
 
 	@Bean
-	CommandLineRunner run(AccountService accountService){
+	CommandLineRunner run(AccountService accountService, SettingsService settingsService){
 		return args -> {
 			SignUpDTO signUpDTO = new SignUpDTO();
 			signUpDTO.setPassword("1234");

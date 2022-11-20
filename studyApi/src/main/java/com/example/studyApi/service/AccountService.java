@@ -1,7 +1,10 @@
 package com.example.studyApi.service;
 
+import com.example.studyApi.domain.Tag;
 import com.example.studyApi.dto.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 public interface AccountService extends UserDetailsService {
 
@@ -18,4 +21,12 @@ public interface AccountService extends UserDetailsService {
     ProfileDTO getProfileByNickname(String nickname);
 
     void updatePassword(PasswordDTO passwordDTO, String nickname);
+
+    void addTag(String nickname, Tag tag);
+
+    void deleteTag(String tagTitle, String nickname);
+
+    List<String> getZone(String nickname);
+
+    void addZone(List<ZoneDTO> zoneData,String nickname);
 }

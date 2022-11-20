@@ -2,10 +2,14 @@ package com.example.studyApi.service;
 
 import com.example.studyApi.domain.Account;
 import com.example.studyApi.domain.Roles;
+import com.example.studyApi.domain.Tag;
+import com.example.studyApi.domain.Zone;
 import com.example.studyApi.dto.*;
 import com.example.studyApi.mail.EmailMessage;
 import com.example.studyApi.mail.EmailService;
 import com.example.studyApi.repository.AccountRepository;
+import com.example.studyApi.repository.TagRepository;
+import com.example.studyApi.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -19,6 +23,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,6 +39,8 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final TemplateEngine templateEngine;
+    private final TagRepository tagRepository;
+    private final ZoneRepository zoneRepository;
 
 
 
@@ -57,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
         account.beginningRole();
         account.generateEmailToken();
         accountRepository.save(account);
-        sendSignUpConfirmEmail(account);
+        //sendSignUpConfirmEmail(account);
         return signUpDTO.getNickname();
     }
 
@@ -100,6 +107,40 @@ public class AccountServiceImpl implements AccountService {
         account.changePassword(passwordDTO);
     }
 
+    @Override
+    public void addTag(String nickname, Tag tag) {
+        Account account = getAccount(nickname);
+        account.getTags().add(tag);
+    }
+
+    @Override
+    public void deleteTag(String tagTitle, String nickname) {
+        Account account = getAccount(nickname);
+        Tag tag = tagRepository.findByTitle(tagTitle).get();
+        account.getTags().remove(tag);
+        tagRepository.delete(tag);
+    }
+
+    @Override
+    public List<String> getZone(String nickname) {
+        Account zonesByNickname = accountRepository.findZonesByNickname(nickname);
+        if(zonesByNickname.getZones() != null){
+            List<String> collect  = zonesByNickname.getZones().stream()
+                    .map(Zone::getLocalNameOfCity).collect(Collectors.toList());
+            return collect;
+        }
+        return null;
+    }
+
+    @Override
+    public void addZone(List<ZoneDTO> zoneData,String nickname) {
+        Account account = accountRepository.findZonesByNickname(nickname);
+        List<String> collect = zoneData.stream().map(ZoneDTO::getValue).collect(Collectors.toList());
+        Set<Zone> zones = zoneRepository.findByLocalNameOfCityIn(collect);
+        account.getZones().clear();
+        zones.forEach(zone -> account.getZones().add(zone));
+    }
+
     private Account getAccount(String nickname) {
         return accountRepository.findByNickname(nickname).get();
     }
@@ -134,4 +175,7 @@ public class AccountServiceImpl implements AccountService {
                 .build();
         emailService.sendEmail(emailMessage);
     }
+
+
+
 }
