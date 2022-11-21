@@ -52,12 +52,12 @@ public class AccountController {
     }
 
     @PostMapping(value = "/signUp",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String,String>> saveUser(@Valid @RequestBody SignUpDTO signUpDTO, Errors errors){
+    public ResponseEntity<Map<String,Object>> saveUser(@Valid @RequestBody SignUpDTO signUpDTO, Errors errors){
         log.info("---- ");
         log.info(signUpDTO.getEmail());
-        Map<String,String> result = new HashMap<>();
+        Map<String,Object> result = new HashMap<>();
         if(errors.hasErrors()){
-            result.put("result",errors.toString());
+            result.put("result",errors.getAllErrors());
             return ResponseEntity.ok(result);
         }
         String newUser = accountService.saveUser(signUpDTO);
