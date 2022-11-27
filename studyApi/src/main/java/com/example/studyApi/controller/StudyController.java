@@ -1,8 +1,10 @@
 package com.example.studyApi.controller;
 
 import com.example.studyApi.domain.Tag;
+import com.example.studyApi.domain.Zone;
 import com.example.studyApi.dto.StudyDTO;
 import com.example.studyApi.dto.TagDTO;
+import com.example.studyApi.dto.ZoneDTO;
 import com.example.studyApi.service.StudyService;
 import com.example.studyApi.valid.StudyValidation;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +62,19 @@ public class StudyController {
         List<TagDTO> collect = tags.stream()
                 .map(tag -> modelMapper.map(tag, TagDTO.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(collect);
+    }
+
+    @GetMapping(value = "/study/zone/{path}")
+    public ResponseEntity<?> getZones(@PathVariable("path")String path){
+        List<Zone> zones = studyService.getZones(path);
+        List<String> collect = zones.stream().map(Zone::getLocalNameOfCity).collect(Collectors.toList());
+        return ResponseEntity.ok().body(collect);
+    }
+
+    @PostMapping(value = "/study/zone/{path}")
+    public ResponseEntity<?> addZones(@PathVariable("path")String path , @RequestBody List<ZoneDTO> zoneData){
+        studyService.addZone(zoneData,path);
+        return ResponseEntity.ok().body(zoneData);
     }
 
 }

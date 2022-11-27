@@ -3,11 +3,14 @@ package com.example.studyApi.service;
 import com.example.studyApi.domain.Account;
 import com.example.studyApi.domain.Study;
 import com.example.studyApi.domain.Tag;
+import com.example.studyApi.domain.Zone;
 import com.example.studyApi.dto.StudyDTO;
 import com.example.studyApi.dto.TagDTO;
+import com.example.studyApi.dto.ZoneDTO;
 import com.example.studyApi.repository.AccountRepository;
 import com.example.studyApi.repository.StudyRepository;
 import com.example.studyApi.repository.TagRepository;
+import com.example.studyApi.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -17,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -28,6 +33,7 @@ public class StudyServiceImpl implements StudyService{
     private final ModelMapper modelMapper;
     private final AccountRepository accountRepository;
     private final TagRepository tagRepository;
+    private final ZoneRepository zoneRepository;
 
 
     @Override
@@ -58,11 +64,23 @@ public class StudyServiceImpl implements StudyService{
         study.getTags().add(addTag);
         return tagDTO;
     }
-
     @Override
     public List<Tag> getTags(String path) {
-        List<Tag> test = studyRepository.findTest(path);
+        List<Tag> tags = studyRepository.findOnlyTag(path);
+        return tags;
+    }
 
-        return test;
+    @Override
+    public List<Zone> getZones(String path) {
+        List<Zone> tags = studyRepository.findOnlyZone(path);
+        return tags;
+    }
+
+    @Override
+    public void addZone(List<ZoneDTO> zoneData, String path) {
+        Study study = studyRepository.findStudyWithZonesByPath(path).get();
+        List<String> collect = zoneData.stream().map(ZoneDTO::getValue).collect(Collectors.toList());
+        Set<Zone> zones = zoneRepository.findByLocalNameOfCityIn(collect);
+        zones.forEach(zone -> study.getZones().add(zone));
     }
 }

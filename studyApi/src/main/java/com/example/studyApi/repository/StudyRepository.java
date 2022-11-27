@@ -2,6 +2,7 @@ package com.example.studyApi.repository;
 
 import com.example.studyApi.domain.Study;
 import com.example.studyApi.domain.Tag;
+import com.example.studyApi.domain.Zone;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,5 +35,8 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
     Optional<Study> findOnlyTagByPath(@Param("path") String path);
 
     @Query("select t from Study s inner join s.tags t  where s.path = :path")
-    List<Tag> findTest(@Param("path") String path);
+    List<Tag> findOnlyTag(@Param("path") String path);
+
+    @Query("select z from Study s inner join s.zones z  where s.path = :path")
+    List<Zone> findOnlyZone(@Param("path") String path);
 }
