@@ -58,8 +58,11 @@ public class SettingsController {
      *  TAG
      */
     @GetMapping(value = "/tag/{nickname}")
-    public ResponseEntity<List<String>> updatePassword(@PathVariable("nickname")String nickname){
+    public ResponseEntity<?> updatePassword(@PathVariable("nickname")String nickname){
         List<String> tags = settingsService.getTags(nickname);
+        if(tags == null){
+            return ResponseEntity.ok().body(null);
+        }
         return ResponseEntity.ok().body(tags);
     }
 

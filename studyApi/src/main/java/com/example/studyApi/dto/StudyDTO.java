@@ -1,13 +1,22 @@
 package com.example.studyApi.dto;
 
+import com.example.studyApi.domain.Tag;
+import com.example.studyApi.domain.Zone;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudyDTO {
 
     @NotBlank
@@ -23,5 +32,9 @@ public class StudyDTO {
     private String shortDescription;
 
     private String fullDescription;
+
+    private Set<Tag> tags = new HashSet<>();
+
+    private Set<Zone> zones = new HashSet<>();
 
 }

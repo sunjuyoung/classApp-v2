@@ -34,11 +34,12 @@ public class SettingsServiceImpl implements SettingsService{
     @Override
     public List<String> getTags(String nickname) {
         Account account = accountRepository.findAccountByNickname(nickname);
-        if(account.getTags() != null){
-            List<String> tags =  account.getTags().stream().map(Tag::getTitle).collect(Collectors.toList());
+        List<String> tags = null;
+        if(account.getTags() != null && account.getTags().size() >0){
+            tags =  account.getTags().stream().map(Tag::getTitle).collect(Collectors.toList());
             return tags;
         }
-        return null;
+        return tags;
     }
 
     @Override

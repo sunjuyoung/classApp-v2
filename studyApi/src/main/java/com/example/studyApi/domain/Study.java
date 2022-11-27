@@ -3,9 +3,17 @@ package com.example.studyApi.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@NamedEntityGraph(name = "Study.withAll", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("manager"),
+        @NamedAttributeNode("members"),
+})
 @Builder
 @Entity
 @Getter
@@ -44,10 +52,26 @@ public class Study {
     private String image;
 
     @ManyToMany
+    @JoinTable(name = "study_tag",
+            joinColumns = @JoinColumn(name = "study_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
     @ManyToMany
+    @JoinTable(name = "study_zone",
+            joinColumns = @JoinColumn(name = "study_id"),
+            inverseJoinColumns = @JoinColumn(name = "zone_id"))
     private Set<Zone> zones = new HashSet<>();
+
+
+    private LocalDateTime publishedDateTime;
+    private LocalDateTime closedDateTime;
+    private LocalDateTime recruitedUpdateDateTime;
+
+    private boolean recruiting;
+    private boolean published;
+    private boolean closed;
+    private boolean useBanner;
 
 
     public void createStudy(Account account){
