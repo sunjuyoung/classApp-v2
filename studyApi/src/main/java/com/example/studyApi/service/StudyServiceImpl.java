@@ -7,6 +7,8 @@ import com.example.studyApi.domain.Zone;
 import com.example.studyApi.dto.StudyDTO;
 import com.example.studyApi.dto.TagDTO;
 import com.example.studyApi.dto.ZoneDTO;
+import com.example.studyApi.dto.study.DescriptionDTO;
+import com.example.studyApi.dto.study.MemberDTO;
 import com.example.studyApi.repository.AccountRepository;
 import com.example.studyApi.repository.StudyRepository;
 import com.example.studyApi.repository.TagRepository;
@@ -42,6 +44,7 @@ public class StudyServiceImpl implements StudyService{
         Study study = modelMapper.map(studyDTO, Study.class);
         study.createStudy(account);
         studyRepository.save(study);
+
         return studyDTO.getTitle();
     }
 
@@ -82,5 +85,44 @@ public class StudyServiceImpl implements StudyService{
         List<String> collect = zoneData.stream().map(ZoneDTO::getValue).collect(Collectors.toList());
         Set<Zone> zones = zoneRepository.findByLocalNameOfCityIn(collect);
         zones.forEach(zone -> study.getZones().add(zone));
+    }
+
+    @Override
+    public boolean publishStudy(String path, String nickname) {
+        Study study = studyRepository.findStudyWithManagerByPath(path).get();
+        boolean result = false;
+        if(study.getManager().getNickname().equals(nickname)){
+            study.publishStudy();
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean closeStudy(String path, String nickname) {
+        Study study = studyRepository.findStudyWithManagerByPath(path).get();
+        boolean result = false;
+        if(study.getManager().getNickname().equals(nickname)){
+            study.closeStudy();
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public DescriptionDTO studyListBoard(String path) {
+        Study study = studyRepository.findStudyWithManagerByPath(path).get();
+        DescriptionDTO descriptionDTO = DescriptionDTO.builder()
+                .fullDescription(study.getFullDescription())
+                .shortDescription(study.getShortDescription())
+                .build();
+        return descriptionDTO;
+    }
+
+    @Override
+    public MemberDTO getStudyMembers(String path) {
+        Study study = studyRepository.findStudyWithMemberByPath(path).get();
+        MemberDTO map = modelMapper.map(study, MemberDTO.class);
+        return map;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.studyApi.repository;
 
+import com.example.studyApi.domain.Account;
 import com.example.studyApi.domain.Study;
 import com.example.studyApi.domain.Tag;
 import com.example.studyApi.domain.Zone;
@@ -15,7 +16,7 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
 
     boolean existsByPath(String path);
 
-    @EntityGraph(value = "Study.withAll",type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = "Study.withAll", type = EntityGraph.EntityGraphType.LOAD)
     Optional<Study> findByPath(String path);
 
     @EntityGraph(attributePaths = {"tags"})
@@ -24,8 +25,11 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
     @EntityGraph(attributePaths = {"zones"})
     Optional<Study> findStudyWithZonesByPath(String path);
 
-    @EntityGraph(attributePaths = {"members","manager"})
+    @EntityGraph(attributePaths = {"members", "manager"})
     Optional<Study> findStudyWithMemberByPath(String path);
+
+    @EntityGraph(attributePaths = {"manager"})
+    Optional<Study> findStudyWithManagerByPath(String path);
 
     @Query(value = "SELECT t.tag_id,t.title " +
             "FROM study s " +
@@ -39,4 +43,11 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
 
     @Query("select z from Study s inner join s.zones z  where s.path = :path")
     List<Zone> findOnlyZone(@Param("path") String path);
+
+    @EntityGraph(attributePaths = {"zones", "tags"})
+    List<Study> findAll();
+
+
+
+
 }

@@ -5,6 +5,8 @@ import com.example.studyApi.domain.Zone;
 import com.example.studyApi.dto.StudyDTO;
 import com.example.studyApi.dto.TagDTO;
 import com.example.studyApi.dto.ZoneDTO;
+import com.example.studyApi.dto.study.DescriptionDTO;
+import com.example.studyApi.dto.study.MemberDTO;
 
 import java.util.List;
 
@@ -21,4 +23,12 @@ public interface StudyService {
     List<Zone> getZones(String path);
 
     void addZone(List<ZoneDTO> zoneData, String path);
+
+    boolean publishStudy(String path, String nickname);
+
+    boolean closeStudy(String path, String nickname);
+
+    DescriptionDTO studyListBoard(String path);
+
+    MemberDTO getStudyMembers(String path);
 }

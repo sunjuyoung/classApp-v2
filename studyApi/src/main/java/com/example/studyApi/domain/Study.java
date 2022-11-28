@@ -57,7 +57,7 @@ public class Study {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "study_zone",
             joinColumns = @JoinColumn(name = "study_id"),
             inverseJoinColumns = @JoinColumn(name = "zone_id"))
@@ -77,5 +77,17 @@ public class Study {
     public void createStudy(Account account){
         this.manager = account;
         this.members.add(account);
+    }
+
+    public boolean studyRemovable(){
+        return !this.published;
+    }
+
+    public void publishStudy(){
+        this.published = true;
+        this.publishedDateTime = LocalDateTime.now();
+    }
+    public void closeStudy(){
+        this.published = false;
     }
 }

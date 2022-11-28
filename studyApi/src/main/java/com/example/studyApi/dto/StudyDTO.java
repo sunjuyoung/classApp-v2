@@ -1,7 +1,9 @@
 package com.example.studyApi.dto;
 
+import com.example.studyApi.domain.Account;
 import com.example.studyApi.domain.Tag;
 import com.example.studyApi.domain.Zone;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudyDTO {
 
     @NotBlank
@@ -37,4 +40,9 @@ public class StudyDTO {
 
     private Set<Zone> zones = new HashSet<>();
 
+    private Account manager;
+
+    private boolean recruiting;
+    private boolean published;
+    private boolean closed;
 }
