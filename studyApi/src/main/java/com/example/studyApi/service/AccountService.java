@@ -2,6 +2,7 @@ package com.example.studyApi.service;
 
 import com.example.studyApi.domain.Tag;
 import com.example.studyApi.dto.*;
+import com.example.studyApi.dto.file.ProfileImageDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface AccountService extends UserDetailsService {
     List<String> getZone(String nickname);
 
     void addZone(List<ZoneDTO> zoneData,String nickname);
+
+    String uploadProfileImage(String nickname, ProfileImageDTO file);
 }

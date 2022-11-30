@@ -8,6 +8,14 @@ spring:
     username: sun
     password: ENC(H63qI5bYWSETtEpTW94YFS+66+xLGEr0)
 
+  servlet:
+    multipart:
+      enabled: true
+      location: /Users/juyoungsun/work/fileUpload
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -28,6 +36,15 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+
+
+
+
+
+com.example.studyApi.path: /Users/juyoungsun/work/fileUpload
+
 
 
 logging:

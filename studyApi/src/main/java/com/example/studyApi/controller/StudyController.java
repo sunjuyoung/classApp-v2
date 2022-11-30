@@ -110,7 +110,6 @@ public class StudyController {
     @GetMapping(value = "/study/members/{path}")
     public ResponseEntity<?> getStudyMembers(@PathVariable("path")String path){
         MemberDTO memberDTO =  studyService.getStudyMembers(path);
-
         return ResponseEntity.ok().body(memberDTO);
     }
 
@@ -128,4 +127,21 @@ public class StudyController {
         }
         return ResponseEntity.ok().body("failed");
     }
+
+    @PostMapping("/study/join/{path}/{nickname}")
+    public ResponseEntity<String> joinStudy(@PathVariable("path")String path,@PathVariable("nickname")String nickname) {
+        if(studyService.joinStudy(path,nickname)){
+            return ResponseEntity.ok().body("success");
+        }
+        return ResponseEntity.ok().body("failed");
+    }
+    @PostMapping("/study/leave/{path}/{nickname}")
+    public ResponseEntity<String> leaveStudy(@PathVariable("path")String path,@PathVariable("nickname")String nickname) {
+        if(studyService.leaveStudy(path,nickname)){
+            return ResponseEntity.ok().body("success");
+        }
+        return ResponseEntity.ok().body("failed");
+    }
+
+
 }

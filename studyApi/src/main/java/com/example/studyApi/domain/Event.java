@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Entity
@@ -26,6 +28,8 @@ public class Event extends BaseTime{
     @Column(name = "event_id")
     private Long id;
 
+    @Column(nullable = false)
+    private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Study study;
@@ -41,6 +45,9 @@ public class Event extends BaseTime{
     private LocalDateTime endDateTime;
 
     private int limitedNumber;
+
+    @OneToMany(mappedBy = "event")
+    private List<Enrollment> enrollments = new ArrayList<>();
 
 
 

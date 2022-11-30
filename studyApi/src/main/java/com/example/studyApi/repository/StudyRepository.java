@@ -47,6 +47,8 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
     @EntityGraph(attributePaths = {"zones", "tags"})
     List<Study> findAll();
 
+    boolean existsByMembers(Account members);
+
 
 
 

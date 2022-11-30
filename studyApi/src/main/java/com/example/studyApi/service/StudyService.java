@@ -31,4 +31,8 @@ public interface StudyService {
     DescriptionDTO studyListBoard(String path);
 
     MemberDTO getStudyMembers(String path);
+
+    boolean joinStudy(String path, String nickname);
+
+    boolean leaveStudy(String path, String nickname);
 }

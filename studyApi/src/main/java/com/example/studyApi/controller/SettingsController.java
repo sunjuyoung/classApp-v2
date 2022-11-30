@@ -3,22 +3,25 @@ package com.example.studyApi.controller;
 import com.example.studyApi.domain.Tag;
 import com.example.studyApi.domain.Zone;
 import com.example.studyApi.dto.*;
+import com.example.studyApi.dto.file.ProfileImageDTO;
 import com.example.studyApi.repository.ZoneRepository;
 import com.example.studyApi.service.AccountService;
 import com.example.studyApi.service.SettingsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -102,6 +105,15 @@ public class SettingsController {
         return ResponseEntity.ok().body(zoneData);
     }
 
+
+    @Value("${com.example.studyApi.path}")
+    private String uploadPath;
+
+    @PostMapping(value = "/profile/upload/{nickname}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String upload(@PathVariable("nickname")String nickname ,ProfileImageDTO file){
+        String path = accountService.uploadProfileImage(nickname,file);
+        return path;
+    }
 
 
 }

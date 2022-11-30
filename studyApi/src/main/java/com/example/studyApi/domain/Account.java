@@ -78,7 +78,7 @@ public class Account{
     private String emailCheckToken;
     private LocalDateTime emailCheckAt;
 
-    @Lob
+
     private String profileImage;
 
     private LocalDateTime joinAt;
@@ -101,6 +101,10 @@ public class Account{
     public void generateEmailToken(){
         this.emailCheckToken = UUID.randomUUID().toString();
         this.emailCheckAt = LocalDateTime.now();
+    }
+
+    public void uploadProfileImage(String file){
+        this.profileImage = file;
     }
 
 

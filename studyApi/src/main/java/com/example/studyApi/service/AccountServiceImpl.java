@@ -5,6 +5,7 @@ import com.example.studyApi.domain.Roles;
 import com.example.studyApi.domain.Tag;
 import com.example.studyApi.domain.Zone;
 import com.example.studyApi.dto.*;
+import com.example.studyApi.dto.file.ProfileImageDTO;
 import com.example.studyApi.mail.EmailMessage;
 import com.example.studyApi.mail.EmailService;
 import com.example.studyApi.repository.AccountRepository;
@@ -13,6 +14,7 @@ import com.example.studyApi.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,10 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -42,7 +44,8 @@ public class AccountServiceImpl implements AccountService {
     private final TagRepository tagRepository;
     private final ZoneRepository zoneRepository;
 
-
+    @Value("${com.example.studyApi.path}")
+    private String uploadPath;
 
     @Override
     public AccountDTO getAccount(Long id) {
@@ -139,6 +142,21 @@ public class AccountServiceImpl implements AccountService {
         Set<Zone> zones = zoneRepository.findByLocalNameOfCityIn(collect);
         account.getZones().clear();
         zones.forEach(zone -> account.getZones().add(zone));
+    }
+
+    @Override
+    public String uploadProfileImage(String nickname, ProfileImageDTO file) {
+        Account account = accountRepository.findByNickname(nickname).get();
+        String originName = file.getFile().getOriginalFilename();
+        String uuid = UUID.randomUUID().toString();
+        Path savePath = Paths.get(uploadPath, uuid+"_"+originName);
+        try {
+            file.getFile().transferTo(savePath);
+            account.uploadProfileImage(savePath.toString());
+        }catch (IOException e){
+            log.info(e);
+        }
+        return savePath.toString();
     }
 
     private Account getAccount(String nickname) {

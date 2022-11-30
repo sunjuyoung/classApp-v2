@@ -125,4 +125,26 @@ public class StudyServiceImpl implements StudyService{
         MemberDTO map = modelMapper.map(study, MemberDTO.class);
         return map;
     }
+
+    @Override
+    public boolean joinStudy(String path, String nickname) {
+        Study study = studyRepository.findStudyWithMemberByPath(path).get();
+        Account account = accountRepository.findByNickname(nickname).get();
+        if(studyRepository.existsByMembers(account)){
+            return false;
+        }
+        study.getMembers().add(account);
+        return true;
+    }
+
+    @Override
+    public boolean leaveStudy(String path, String nickname) {
+        Study study = studyRepository.findStudyWithMemberByPath(path).get();
+        Account account = accountRepository.findByNickname(nickname).get();
+        if(!studyRepository.existsByMembers(account)){
+            return false;
+        }
+        study.getMembers().remove(account);
+        return true;
+    }
 }
