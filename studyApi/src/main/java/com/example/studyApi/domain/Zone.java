@@ -12,7 +12,8 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "zone_id")
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = "id")
 public class Zone {
 
     @Id @GeneratedValue

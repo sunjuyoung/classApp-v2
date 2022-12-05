@@ -1,42 +1,47 @@
 package com.example.studyApi.dto.event;
 
 import com.example.studyApi.domain.Account;
+import com.example.studyApi.domain.Enrollment;
+import com.example.studyApi.domain.Event;
 import com.example.studyApi.domain.Study;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateEventDTO {
+public class EventDTO implements Serializable {
 
-    @NotBlank
     private String title;
+
+    private String study;
+
+    private String manager;
 
     private String description;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate enrollmentEndTime;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate enrollmentStartTime;
-
     private LocalDate startDateTime;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDateTime;
 
-    @NotBlank
-    private String limitedNumber;
+    private int limitedNumber;
+
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+
+
+
+
 }

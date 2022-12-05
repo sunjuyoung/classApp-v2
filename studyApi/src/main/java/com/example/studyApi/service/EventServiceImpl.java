@@ -4,6 +4,8 @@ import com.example.studyApi.domain.Account;
 import com.example.studyApi.domain.Event;
 import com.example.studyApi.domain.Study;
 import com.example.studyApi.dto.event.CreateEventDTO;
+import com.example.studyApi.dto.event.EventDTO;
+import com.example.studyApi.dto.event.EventListDTO;
 import com.example.studyApi.repository.AccountRepository;
 import com.example.studyApi.repository.EventRepository;
 import com.example.studyApi.repository.StudyRepository;
@@ -13,7 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -31,20 +34,30 @@ public class EventServiceImpl implements EventService{
     @Override
     public void createEvent(String nickname, String path, CreateEventDTO createEventDTO) {
         Study study = studyRepository.findByPath(path).get();
-        Account account = Account.builder()
-                .nickname(nickname)
-                .build();
-        Event event = Event.builder()
-                .manager(account)
-                .title(createEventDTO.getTitle())
-                .description(createEventDTO.getDescription())
-                .endDateTime(createEventDTO.getEndDateTime())
-                .enrollmentEndTime(createEventDTO.getEnrollmentEndTime())
-                .study(study)
-                .enrollmentStartTime(createEventDTO.getEnrollmentStartTime())
-                .startDateTime(LocalDateTime.now())
-                .limitedNumber(createEventDTO.getLimitedNumber())
-                .build();
+        Account account = accountRepository.findByNickname(nickname).get();
+        Event event = newEvent(study, account, createEventDTO);
         eventRepository.save(event);
     }
+
+    @Override
+    public List<EventListDTO> getEvents(String path) {
+        Study study = studyRepository.findByPath(path).get();
+        List<Event> events = eventRepository.findByStudy(study);
+        List<EventListDTO> eventListDTOS = new ArrayList<>();
+        events.forEach(event -> {
+            eventListDTOS.add(newEventListDTO(event));
+        });
+
+        return eventListDTOS;
+    }
+
+    @Override
+    public EventDTO getEvent(String path, Long id) {
+        Event event = eventRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException());
+        EventDTO eventDTO = newEventDTO(event);
+        return eventDTO;
+    }
+
+
 }

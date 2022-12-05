@@ -7,6 +7,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/studyapi
     username: sun
     password: ENC(H63qI5bYWSETtEpTW94YFS+66+xLGEr0)
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
   servlet:
     multipart:

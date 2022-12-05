@@ -47,11 +47,11 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
             String nickname = (String)payload.get("nickname");
             log.info("--- nickname ---- " + nickname);
-            UserDetails userDetails = accountService.loadUserByUsername(nickname);
-
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//            UserDetails userDetails = accountService.loadUserByUsername(nickname);
+//
+//            UsernamePasswordAuthenticationToken authenticationToken =
+//                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
+//            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request,response);
         }catch (RuntimeException e){
             log.error(e);

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 @Getter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
 @ToString(exclude = "tag_id")
 public class Tag {
 

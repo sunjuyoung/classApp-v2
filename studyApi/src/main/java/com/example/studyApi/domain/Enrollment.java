@@ -24,10 +24,11 @@ public class Enrollment extends BaseTime{
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "enrollments")
     private Event event;
-
-    @ManyToOne
-    private Account account;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Account account;
 
     private boolean accept;
 

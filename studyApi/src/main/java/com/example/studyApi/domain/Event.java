@@ -1,11 +1,9 @@
 package com.example.studyApi.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @SequenceGenerator(
         name = "EVENT_SEQ_GENERATOR",
         sequenceName = "STUDY_SEQ",
@@ -35,14 +34,14 @@ public class Event extends BaseTime{
     private Study study;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account manager;
+    private Account createBy;
 
     private String description;
 
-    private LocalDateTime enrollmentEndTime;
-    private LocalDateTime enrollmentStartTime;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private LocalDate enrollmentEndTime;
+    private LocalDate enrollmentStartTime;
+    private LocalDate startDateTime;
+    private LocalDate endDateTime;
 
     private int limitedNumber;
 
