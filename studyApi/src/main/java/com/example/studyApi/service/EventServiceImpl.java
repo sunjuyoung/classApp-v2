@@ -15,9 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -40,15 +39,24 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public List<EventListDTO> getEvents(String path) {
+    public Map<String,Object> getEvents(String path) {
         Study study = studyRepository.findByPath(path).get();
         List<Event> events = eventRepository.findByStudy(study);
         List<EventListDTO> eventListDTOS = new ArrayList<>();
-        events.forEach(event -> {
-            eventListDTOS.add(newEventListDTO(event));
-        });
-
-        return eventListDTOS;
+        List<EventListDTO> oldEventListDTOS = new ArrayList<>();
+        if(events != null || events.size() >0){
+            events.forEach(event -> {
+                if(event.getEndDateTime().isBefore(LocalDate.now())){
+                    eventListDTOS.add(newEventListDTO(event));
+                }else{
+                    oldEventListDTOS.add(newEventListDTO(event));
+                }
+            });
+        }
+        Map<String,Object> eventMap = new HashMap<>();
+        eventMap.put("newEventList",eventListDTOS);
+        eventMap.put("oldEventList",oldEventListDTOS);
+        return eventMap;
     }
 
     @Override
@@ -56,6 +64,7 @@ public class EventServiceImpl implements EventService{
         Event event = eventRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException());
         EventDTO eventDTO = newEventDTO(event);
+
         return eventDTO;
     }
 

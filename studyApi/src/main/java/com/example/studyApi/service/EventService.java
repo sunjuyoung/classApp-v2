@@ -9,6 +9,7 @@ import com.example.studyApi.dto.event.EventListDTO;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface EventService {
 
@@ -30,7 +31,7 @@ public interface EventService {
         return event;
     }
 
-    List<EventListDTO> getEvents(String path);
+    Map<String,Object> getEvents(String path);
 
 
     default EventListDTO newEventListDTO(Event event){

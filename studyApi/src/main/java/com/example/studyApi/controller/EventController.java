@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RestController
@@ -35,8 +36,8 @@ public class EventController {
 
 
     @GetMapping(value = "/{path}")
-    public ResponseEntity<List<EventListDTO>> getEvents(@PathVariable("path")String path){
-        List<EventListDTO> events = eventService.getEvents(path);
+    public ResponseEntity<Map<String, Object>> getEvents(@PathVariable("path")String path){
+        Map<String, Object> events = eventService.getEvents(path);
         return ResponseEntity.ok().body(events);
     }
 

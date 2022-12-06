@@ -9,6 +9,7 @@ import com.example.studyApi.dto.TagDTO;
 import com.example.studyApi.dto.ZoneDTO;
 import com.example.studyApi.dto.study.DescriptionDTO;
 import com.example.studyApi.dto.study.MemberDTO;
+import com.example.studyApi.event.StudyCreatedEvent;
 import com.example.studyApi.repository.AccountRepository;
 import com.example.studyApi.repository.StudyRepository;
 import com.example.studyApi.repository.TagRepository;
@@ -16,6 +17,7 @@ import com.example.studyApi.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ public class StudyServiceImpl implements StudyService{
     private final AccountRepository accountRepository;
     private final TagRepository tagRepository;
     private final ZoneRepository zoneRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
 
     @Override
@@ -94,6 +97,7 @@ public class StudyServiceImpl implements StudyService{
         if(study.getManager().getNickname().equals(nickname)){
             study.publishStudy();
             result = true;
+            eventPublisher.publishEvent(new StudyCreatedEvent(study));
         }
         return result;
     }

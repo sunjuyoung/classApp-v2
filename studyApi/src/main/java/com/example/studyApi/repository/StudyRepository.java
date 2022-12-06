@@ -51,7 +51,6 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
 
     boolean existsByMembers(Account members);
 
-
-
-
+    @EntityGraph(attributePaths = {"zones", "tags"})
+    Study findStudyWithTagsAndZonesById(Long id);
 }
